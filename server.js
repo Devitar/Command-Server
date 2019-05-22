@@ -12,7 +12,7 @@ const minutes = (date.getMinutes()).toString();
 
 const serverLog = fs.createWriteStream(`serverlog${month+'-'+day+'-'+year+'_'+hours+'-'+minutes+'-'+seconds}.txt`);
 
-// const adminPassword = "password123";
+const adminPassword = "password123";
 
 let clients = [];
 
@@ -107,9 +107,9 @@ function handleData(data, client){
 
 };
 
-// const firstArg = new RegExp(/\s+[a-zA-Z]+\s/i);
-// const secondArg = new RegExp(/ /i);
-// const serverCommands = [
-//     new RegExp(/\/w/i), 
+const firstArg = new RegExp(/\/(.*?)[\s]/i); //grab command
+const secondArg = new RegExp(/\/w\s([^\s]*)/i);//grab after command
+const serverCommands = [
+    new RegExp(/\/w/i), 
 
-// ]
+]
