@@ -107,6 +107,17 @@ function handleData(data, client){
             if (command[0] !== "/clientlist "){
                 let commandData = data.match(secondArg);
                 console.log("Second Regex", commandData[1]);
+                let goTo;
+                clients.forEach((sclient) => {
+                    if (sclient.getProperty('name') === commandData[1]){
+                        goTo = sclient;
+                    };
+                });
+                if (!goTo){
+                    client.getProperty('client').write("Client '"+commandData[1]+"' not found!");
+                }else{
+                    goTo.getProperty('client').write("//Whisper from '"+client.getProperty('name')+"': "+data+"\n");
+                };
             }else{
     
             };
