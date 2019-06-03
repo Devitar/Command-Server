@@ -92,7 +92,9 @@ function sendToAll(except, message){
 };
 
 const firstArg = new RegExp(/\/(.*?)[\s]/i); //grab command
-const secondArg = new RegExp(/\/w\s([^\s]*)/i);//grab after command
+const firstArgAlt = new RegExp(/\/(.*?)/i);
+//const secondArg = new RegExp(/\/w\s([^\s]*)/i);//grab after command
+const secondArgAlt = new RegExp(/\/w\s([^\s]*)/i);
 // const serverCommands = [
 //     new RegExp(/\/w\s/i), //grabs "/w "
 
@@ -102,11 +104,13 @@ function handleData(data, client){
     if (data.substring(0, 1) === "/"){
         console.log("Command found");
         let command = data.match(firstArg);//firstArg.test(data);//data.search(firstArg);
-        console.log("First Regex", command[0], ";");
         if (command !== null){
+            console.log("First Regex", command[0], ";");
             if (command[0] !== "/clientlist "){
-                let commandData = data.match(secondArg);
-                console.log("Second Regex", commandData[1]);
+                let checkString = `\\${command[0].trim()}\\s([^\\s]*)`;
+                let check2 = new RegExp(checkString, "i");
+                console.log(check2);
+                let commandData = data.match(check2);
                 if (command[0] === "/w "){
                     let goTo;
                     clients.forEach((sclient) => {
@@ -124,6 +128,7 @@ function handleData(data, client){
                         }
                     };
                 }else if(command[0] === "/username "){
+                    console.log(commandData)
                     if (commandData[1] !== ""){
                         sendToAll(client, client.getProperty('name')+" set name to "+commandData[1]);
                         client.setProperty('name', commandData[1]);
@@ -134,7 +139,11 @@ function handleData(data, client){
                     //kick user with name if the password matches
                 }
             }else{
-                //List all clients back to client
+                let allClientsString = "";
+                clients.forEach((sclient) => {
+                    allClientsString += sclient.getProperty('name')+", ";
+                });
+                client.getProperty('client').write("All users: "+allClientsString);
             };
         }else{
             client.getProperty('client').write("Invalid command.");
