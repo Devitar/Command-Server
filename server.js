@@ -124,7 +124,12 @@ function handleData(data, client){
                         }
                     };
                 }else if(command[0] === "/username "){
-                    //update username
+                    if (commandData[1] !== ""){
+                        sendToAll(client, client.getProperty('name')+" set name to "+commandData[1]);
+                        client.setProperty('name', commandData[1]);
+                    }else{
+                        client.getProperty('client').write("Your name cannot be blank.");
+                    }
                 }else if(command[0] === "/kick "){
                     //kick user with name if the password matches
                 }
