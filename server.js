@@ -91,25 +91,40 @@ function sendToAll(except, message){
     });
 };
 
-function handleData(data, client){
-    let sendingClient = null;
-    clients.forEach((sClient) => {
-        if (sClient.getProperty('client') === client.getProperty('client')){
-            sendingClient = sClient;
-        };
-    });
-    serverLog.write(sendingClient.getProperty('name')+"("+sendingClient.getProperty('id')+"): "+data+"\n");
-    clients.forEach((sClient) => {
-        if (client.getProperty('client') !== sClient.getProperty('client')){
-            sClient.getProperty('client').write(sendingClient.getProperty('name')+": "+data);
-        };
-    });
-
-};
-
 const firstArg = new RegExp(/\/(.*?)[\s]/i); //grab command
 const secondArg = new RegExp(/\/w\s([^\s]*)/i);//grab after command
-const serverCommands = [
-    new RegExp(/\/w/i), 
+// const serverCommands = [
+//     new RegExp(/\/w\s/i), //grabs "/w "
 
-]
+// ];
+
+function handleData(data, client){
+    if (data.substring(0, 1) === "/"){
+        console.log("Command found");
+        let command = data.match(firstArg);//firstArg.test(data);//data.search(firstArg);
+        console.log("First Regex", command[0]);
+        if (command !== null){
+            if (command[0] !== "/clientlist "){
+                let commandData = data.match(secondArg);
+                console.log("Second Regex", commandData[1]);
+            }else{
+    
+            };
+        }else{
+            client.getProperty('client').write("Invalid command.");
+        };
+    }else{
+        let sendingClient = null;
+        clients.forEach((sClient) => {
+            if (sClient.getProperty('client') === client.getProperty('client')){
+                sendingClient = sClient;
+            };
+        });
+        serverLog.write(sendingClient.getProperty('name')+"("+sendingClient.getProperty('id')+"): "+data+"\n");
+        clients.forEach((sClient) => {
+            if (client.getProperty('client') !== sClient.getProperty('client')){
+                sClient.getProperty('client').write(sendingClient.getProperty('name')+": "+data);
+            };
+        });
+    };
+};
