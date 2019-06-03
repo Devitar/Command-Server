@@ -116,7 +116,11 @@ function handleData(data, client){
                 if (!goTo){
                     client.getProperty('client').write("Client '"+commandData[1]+"' not found!");
                 }else{
-                    goTo.getProperty('client').write("//Whisper from '"+client.getProperty('name')+"': "+data+"\n");
+                    if (client.getProperty('name') !== commandData[1]){
+                        goTo.getProperty('client').write("//Whisper from '"+client.getProperty('name')+"': "+data+"\n");
+                    }else{
+                        client.getProperty('client').write("You cannot whisper to yourself.");
+                    }
                 };
             }else{
     
