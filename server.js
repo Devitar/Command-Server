@@ -102,28 +102,34 @@ function handleData(data, client){
     if (data.substring(0, 1) === "/"){
         console.log("Command found");
         let command = data.match(firstArg);//firstArg.test(data);//data.search(firstArg);
-        console.log("First Regex", command[0]);
+        console.log("First Regex", command[0], ";");
         if (command !== null){
             if (command[0] !== "/clientlist "){
                 let commandData = data.match(secondArg);
                 console.log("Second Regex", commandData[1]);
-                let goTo;
-                clients.forEach((sclient) => {
-                    if (sclient.getProperty('name') === commandData[1]){
-                        goTo = sclient;
-                    };
-                });
-                if (!goTo){
-                    client.getProperty('client').write("Client '"+commandData[1]+"' not found!");
-                }else{
-                    if (client.getProperty('name') !== commandData[1]){
-                        goTo.getProperty('client').write("//Whisper from '"+client.getProperty('name')+"': "+data+"\n");
+                if (command[0] === "/w "){
+                    let goTo;
+                    clients.forEach((sclient) => {
+                        if (sclient.getProperty('name') === commandData[1]){
+                            goTo = sclient;
+                        };
+                    });
+                    if (!goTo){
+                        client.getProperty('client').write("Client '"+commandData[1]+"' not found!");
                     }else{
-                        client.getProperty('client').write("You cannot whisper to yourself.");
-                    }
-                };
+                        if (client.getProperty('name') !== commandData[1]){
+                            goTo.getProperty('client').write("//Whisper from '"+client.getProperty('name')+"': "+data+"\n");
+                        }else{
+                            client.getProperty('client').write("You cannot whisper to yourself.");
+                        }
+                    };
+                }else if(command[0] === "/username "){
+                    //update username
+                }else if(command[0] === "/kick "){
+                    //kick user with name if the password matches
+                }
             }else{
-    
+                //List all clients back to client
             };
         }else{
             client.getProperty('client').write("Invalid command.");
